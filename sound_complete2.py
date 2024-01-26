@@ -103,8 +103,10 @@ def sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,f
         if j == 0:
           player = sound_obj.play()
           player.eos_action = pyglet.media.Player
-          core.wait(6) # これがないと音声が再生されない
-          player.pause()
+          pyglet.app.run()
+          
+          
+      
           time5 = time.perf_counter()
           time6 = (time5 - time4) + time3
           print('音声再生終了時刻:', time6)
@@ -128,8 +130,9 @@ def sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,f
           # ここから音声の再生
           player = sound_obj.play()
           player.eos_action = pyglet.media.Player
-          core.wait(6) # これがないと音声が再生されない
-          player.pause()
+          
+          pyglet.app.run()
+          
           time5 = time.perf_counter()
           time6 = (time5 - time4) + time3
           print('音声再生終了時刻:', time6)
@@ -169,8 +172,9 @@ def sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,f
             # 音声の再生
           player = sound_obj1.play()
           player.eos_action = pyglet.media.Player
-          core.wait(6) # これがないと音声が再生されない
-          player.pause()
+          
+          pyglet.app.run()
+          
           time5 = time.perf_counter()
           time6 = (time5 - time4) + time3
           print('音声再生終了時刻:', time6)
@@ -213,8 +217,9 @@ def sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,f
             # 音声の再生
           player = sound_obj2.play()
           player.eos_action = pyglet.media.Player
-          core.wait(6) # これがないと音声が再生されない
-          player.pause()
+          
+          pyglet.app.run()
+        
           time5 = time.perf_counter()
           time6 = (time5 - time4) + time3
           print('音声再生終了時刻:', time6)
@@ -328,6 +333,10 @@ if __name__ == "__main__":
     click2(click_positions[0],click_positions1[0],click_positions2[0]) # 実際にクリックする 
 
     i = 0 # 経過時間のカウントのための変数
+    
+    
+    
+    
     # 経過時間の表示と音声の再生
     while True:
         i += 1
@@ -342,11 +351,4 @@ if __name__ == "__main__":
         time3 = time2 - time1 # 経過時間をtime3に代入
 
         if int(time3) == 3: # 10秒経過したら音を鳴らすようにする
-            sound_thread = Thread(target=sound_play, args=(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,filenames2))
-            
-
-            sound_thread.start()
-            
-            
-   
-    
+            sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,filenames2)
