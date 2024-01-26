@@ -39,31 +39,63 @@ def click2(position, position1, position2):
 def sound_load():
     # 音声ファイルのパスを指定
     cwd = os.getcwd()  # 現在の作業ディレクトリ
-    sound_list = glob.glob(cwd + "/IADS-E sound stimuli (IADS-2 is not included)/Nature/*.wav") # 音声ファイルのパスを指定
+    sound_list = glob.glob(cwd + "/sound_jikken1/実験で使う音刺激(候補)/ニュートラル/*.wav") # 音声ファイルのパスを指定
     return sound_list
 
+def sound_load1():
+    # 音声ファイルのパスを指定
+    cwd = os.getcwd()  # 現在の作業ディレクトリ
+    sound_list1 = glob.glob(cwd + "/sound_jikken1/実験で使う音刺激(候補)/ネガティブ/*.wav") # 音声ファイルのパスを指定
+    return sound_list1
+
+def sound_load2():
+    # 音声ファイルのパスを指定
+    cwd = os.getcwd()  # 現在の作業ディレクトリ
+    sound_list2 = glob.glob(cwd + "/sound_jikken1/実験で使う音刺激(候補)/ポジティブ/*.wav") # 音声ファイルのパスを指定
+    return sound_list2
 
 # 音声ファイルの読み込み
-def sound_search(sound_list):
+def sound_search(sound_list,sound_list1,sound_list2):
     sound_Data = {}
+    sound_Data1 = {}
+    sound_Data2 = {}
     filenames = []  # ファイル名を格納するリストを初期化
+    filenames1 = []  # ファイル名を格納するリストを初期化
+    filenames2 = []  # ファイル名を格納するリストを初期化
     for file_path in sound_list:
         sound_obj = pyglet.media.load(file_path)
         # ファイル名を取得し、辞書に追加
         filename = os.path.basename(file_path)
         sound_Data[filename] = sound_obj
-    return sound_Data,filenames
+    
+    for file_path1 in sound_list1:
+        sound_obj1 = pyglet.media.load(file_path1)
+        # ファイル名を取得し、辞書に追加
+        filename1 = os.path.basename(file_path1)
+        sound_Data1[filename1] = sound_obj1
+
+    for file_path2 in sound_list2:
+        sound_obj2 = pyglet.media.load(file_path2)
+        # ファイル名を取得し、辞書に追加
+        filename2 = os.path.basename(file_path2)
+        sound_Data2[filename2] = sound_obj2
+
+
+
+    return sound_Data,filenames,sound_Data1,filenames1,sound_Data2,filenames2
 
 
     
 
 # 音声ファイルの再生
-def sound_play(sound_Data, time3, filenames):
+def sound_play(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,filenames2):
     silent = "silent"
     print('音声再生開始時刻:', time3)
     time4 = time.perf_counter()
     write_to_csv(time3, "Start")  # 開始時刻をCSVに書き込み
     j = 0
+    k = 0
+    l = 0
     
 
     for filenames, sound_obj in sound_Data.items():
@@ -119,6 +151,99 @@ def sound_play(sound_Data, time3, filenames):
         
         #write_to_csv(time6, filename)  # 終了時刻とファイル名をCSVに書き込み
     
+    for filenames1, sound_obj1 in sound_Data1.items():
+        
+        # ここから音声の再生
+      if k == 0:
+           core.wait(10)
+           time8 = time.perf_counter()
+           time9 = (time8 - time4) + time3
+           print('無音生終了時刻:', time9)
+           print('無音生の文字列:', silent)
+           print(time9)
+           write_to_csv(time9, silent)
+            
+
+          
+      else:
+            # 音声の再生
+          player = sound_obj1.play()
+          player.eos_action = pyglet.media.Player
+          core.wait(6) # これがないと音声が再生されない
+          player.pause()
+          time5 = time.perf_counter()
+          time6 = (time5 - time4) + time3
+          print('音声再生終了時刻:', time6)
+          print('音声再生終了ファイル:', filenames1)
+          print(time6)
+          write_to_csv(time6, filenames1)
+
+          core.wait(10)
+          time8 = time.perf_counter()
+          time9 = (time8 - time4) + time3
+          print('無音生終了時刻:', time9)
+          print('無音生の文字列:', silent)
+          print(time9)
+          write_to_csv(time9, silent)
+        
+         
+        
+         
+             
+        
+
+      k += 1
+        # Check if 'c' key is pressed to break the loop (音声再生の強制終了)
+      if keyboard.is_pressed('c'):
+                print("End_Play_Sound")
+                break
+    
+    for filenames2, sound_obj2 in sound_Data2.items():
+        # ここから音声の再生
+      if l == 0:
+           core.wait(10)
+           time8 = time.perf_counter()
+           time9 = (time8 - time4) + time3
+           print('無音生終了時刻:', time9)
+           print('無音生の文字列:', silent)
+           print(time9)
+           write_to_csv(time9, silent)
+            
+      else:
+            # 音声の再生
+          player = sound_obj2.play()
+          player.eos_action = pyglet.media.Player
+          core.wait(6) # これがないと音声が再生されない
+          player.pause()
+          time5 = time.perf_counter()
+          time6 = (time5 - time4) + time3
+          print('音声再生終了時刻:', time6)
+          print('音声再生終了ファイル:', filenames2)
+          print(time6)
+          write_to_csv(time6, filenames2)
+
+          core.wait(10)
+          time8 = time.perf_counter()
+          time9 = (time8 - time4) + time3
+          print('無音生終了時刻:', time9)
+          print('無音生の文字列:', silent)
+          print(time9)
+          write_to_csv(time9, silent)
+        
+        
+      l += 1
+        # Check if 'c' key is pressed to break the loop (音声再生の強制終了)
+      if keyboard.is_pressed('c'):
+                print("End_Play_Sound")
+                break
+
+
+    
+
+
+          
+          
+    
 
 
 
@@ -146,6 +271,12 @@ if __name__ == "__main__":
 
    
     sound_list = sound_load()
+    sound_list1 = sound_load1()
+    sound_list2 = sound_load2()
+
+    length = len(sound_list)
+    length1 = len(sound_list1)
+    length2 = len(sound_list2)
 
     # 以下，各デバイスによって，変更する(sound_device.pyを参照)
 
@@ -177,7 +308,7 @@ if __name__ == "__main__":
                               'HighOutputLatency': 0.0106667,
                                 'DefaultSampleRate': 48000.0, 
                                 'id': 1}
-    sound_Data,filenames = sound_search(sound_list)
+    sound_Data,filenames,sound_Data1,filenames1,sound_Data2,filenames2 = sound_search(sound_list,sound_list1,sound_list2)
     click2(click_positions[0],click_positions1[0],click_positions2[0]) # 実際にクリックする 
 
     i = 0 # 経過時間のカウントのための変数
@@ -194,8 +325,8 @@ if __name__ == "__main__":
         print("経過時間:", time2 - time1) # 経過時間を表示
         time3 = time2 - time1 # 経過時間をtime3に代入
 
-        if int(time3) == 3: # 3秒経過したら音を鳴らすようにする
-            sound_thread = Thread(target=sound_play, args=(sound_Data,time3,filenames))
+        if int(time3) == 3: # 10秒経過したら音を鳴らすようにする
+            sound_thread = Thread(target=sound_play, args=(sound_Data,sound_Data1,sound_Data2, time3, filenames,filenames1,filenames2))
             
 
             sound_thread.start()
