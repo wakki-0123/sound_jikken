@@ -27,16 +27,23 @@ def sound_load(folder_path):
 def sound_play(sound_list,time3):
     time4 = time.perf_counter()
     j = 0
-    time5 = time4
+
     filename = []  # ファイル名を格納するリストを初期化
     for sound_file in sound_list:
-        time6 = (time5 - time4) + time3
-        write_to_csv(time6, "Start")
+        
         filename = os.path.basename(sound_file)
+        
         player = pyglet.media.Player()
         sound = pyglet.media.load(sound_file)
         player.queue(sound)
+        
+        
+
         player.play()
+
+        time5 = time.perf_counter()
+        time6 = (time5 - time4) + time3
+        write_to_csv(time6, "Start")
         player.on_eos = lambda: None  # Do nothing when the sound ends
 
         # Wait for the sound to finish playing
@@ -46,14 +53,14 @@ def sound_play(sound_list,time3):
         time5 = time.perf_counter()
         time6 = (time5 - time4) + time3
         print('音声再生終了時刻:', time6)
-        print('音声再生終了ファイル:', filename)  # 音声が終わったファイル名
+        print('音声再生終了ファイル1:', filename)  # 音声が終わったファイル名
         print(time6)
         write_to_csv(time6, filename)  # 終了時刻とファイル名をCSVに書き込み
           
 
         # Pause for a moment before playing the next sound
         time.sleep(10)
-        time5 = time.perf_counter()
+        #time5 = time.perf_counter()
 
     return j
 
@@ -102,9 +109,10 @@ if __name__ == "__main__":
 
 
     click2(click_positions[0], click_positions1[0], click_positions2[0])
+    time0 = time.perf_counter()
 
     i = 0
-    time1 = time.perf_counter()
+    
     j = 0 
     k = 0
     l = 0
@@ -112,18 +120,22 @@ if __name__ == "__main__":
     while True:
         i += 1
         if i == 1:
-            time1 = time.perf_counter()
+            time1 = time0
+            
         else:
             time1 = time1
 
+        
         time.sleep(1)
         time2 = time.perf_counter()
-        print("経過時間:", time2 - time1)
         time3 = time2 - time1
+        print("経過時間:", time3)
+        
 
         if int(time3) == 3:
+           
             j = sound_play(sound_list,time3)
-            #write_to_csv(time3, "Start")
+           
 
         if j == p:
             time8 = time.perf_counter()
