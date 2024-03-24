@@ -9,6 +9,7 @@ import os
 import glob
 from psychopy import core
 import pyglet
+import xml.etree.ElementTree as ET
 
 # アイトラッカー動作時間
 waittime = 40
@@ -23,23 +24,36 @@ def gaze_data_callback(gaze_data):
 
 # キーボードのsキーでストリーミングを開始/停止する
 def toggle_streaming():
-    # アイトラッカーに眼球ファイルをロードする
-    with open("2t0ylUIZtUuupVCckX7hSA.xml", "rb") as f:
-        calibration_data = f.read()
-    try:
-       my_eyetracker.apply_calibration_data(calibration_data)
-    except Exception as e:
-       print("Error occurred while applying calibration data:", e)
-
-
-    # アイトラッカーに眼球ファイルをアプライする
-    my_eyetracker.apply_calibration_data(calibration_data)
     
-    my_eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
-    time.sleep(waittime)
-    my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
+
+    # キャリブレーションデータXMLファイルから読み込む
+ calibration_data_file_path = "C:/Users/Yoshiki Yasuda/Documents/Tobii Pro Lab/Project2/Data/Calibrations/2t0ylUIZtUuupVCckX7hSA.xml"
+ #calibration_data_file_path = "2t0ylUIZtUuupVCckX7hSA.xml"
+ 
+
+# XMLファイルを解析してキャリブレーションデータを取得
+ try:
+    with open(calibration_data_file_path, "rb") as f:
+        calibration_data = f.read()
+ except FileNotFoundError:
+     print("Error: File not found.")
+     exit()
+ except Exception as e:
+     print(f"An error occurred while reading the file: {e}")
+     exit()
+
+# アイトラッカーにキャリブレーションデータを適用する
+ try:
+     my_eyetracker.apply_calibration_data(calibration_data)
+     print("Calibration data applied successfully.")
+ except Exception as e:
+     print(f"An error occurred: {e}")
+    
+ my_eyetracker.subscribe_to(tr.EYETRACKER_GAZE_DATA, gaze_data_callback, as_dictionary=True)
+ time.sleep(waittime)
+ my_eyetracker.unsubscribe_from(tr.EYETRACKER_GAZE_DATA, gaze_data_callback)
     # CSVファイルに視線データを書き込む
-    with open('gaze_data.csv', 'w', newline='') as csvfile:
+ with open('gaze_data.csv', 'w', newline='') as csvfile:
         fieldnames = ['Time_stamp','Left_eye_diameter', 'Right_eye_diameter']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
@@ -54,9 +68,10 @@ def toggle_streaming():
                 'Right_eye_diameter': right_eye_diameter
             })
             # gaze_data_list を別のファイルに書き込む
-    with open('gaze_data_list.txt', 'w') as file:
-     for data in gaze_data_list:
-        file.write(f"{data}\n")
+ with open('gaze_data_list.txt', 'w') as file:
+        for data in gaze_data_list:
+            file.write(f"{data}\n")
+
 
 # Function to click on specified positions
 def click2(position1, position2):
@@ -128,7 +143,7 @@ def write_to_csv(time_value, filenames):
 def main_function():
 
     click_positions1 = [(1259, 64)]
-    click_positions2 = [(120, 10)]
+    click_positions2 = [(1841, 1055)]
 
     # 使用したいサウンドデバイスを指定
     selected_device = {'DeviceIndex': 6.0,
