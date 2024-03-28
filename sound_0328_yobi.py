@@ -38,6 +38,7 @@ def sound_play(sound_list, time3):
 
         time5 = time.perf_counter()
         time6 = (time5 - time4) + time3
+        write_to_csv(time6, filename, "Start")
         print('音声再生開始時刻:', time6)
         print('音声再生ファイル:', filename)  
 
@@ -47,6 +48,7 @@ def sound_play(sound_list, time3):
 
         time5 = time.perf_counter()
         time6 = (time5 - time4) + time3
+        write_to_csv(time6, filename, "End")
         print('音声再生終了時刻:', time6)
         print('音声再生終了ファイル:', filename)  
 
@@ -58,8 +60,10 @@ def sound_play(sound_list, time3):
         sound = pyglet.media.load(sound_file)
         player.queue(sound)
         player.play()
+        
         time5 = time.perf_counter()
         time6 = (time5 - time4) + time3
+        write_to_csv(time6, filename, "Start")
         print('音声再生開始時刻:', time6)
         print('音声再生ファイル:', filename)
 
@@ -68,6 +72,7 @@ def sound_play(sound_list, time3):
         pyglet.app.run()
         time5 = time.perf_counter()
         time6 = (time5 - time4) + time3
+        write_to_csv(time6, filename, "End")
         print('音声再生開始時刻:', time6)
         print('音声再生ファイル:', filename)
 
@@ -79,15 +84,15 @@ def sound_play(sound_list, time3):
     return j
 
 # Function to write to CSV
-def write_to_csv(time_value, filenames):
+def write_to_csv(time_value, filenames, timing):
     with open('time_log_voice.csv', 'a', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['Timestamp', 'Name']
+        fieldnames = ['Timestamp', 'Name', 'Timing']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         if csvfile.tell() == 0:
             writer.writeheader()
 
-        writer.writerow({'Timestamp': time_value, 'Name': filenames})
+        writer.writerow({'Timestamp': time_value, 'Name': filenames, 'Timing': timing})
 
 if __name__ == "__main__":
     click_positions = [(657, 585)]
