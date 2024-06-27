@@ -77,15 +77,23 @@ def sound_play(sound_list, time3):
         print('音声再生ファイル:', filename)
 
         # インターバルを設定
-        time.sleep(10)
+        time.sleep(20)
 
         j += 1
 
     return j
 
 # Function to write to CSV
+
+#time_log_voice(前半：１or後半：２)_(被験者番号Num).csvとして音源ログファイルを作成（※実行直後にターミナルに入力）
+Num = input('被験者番号を半角で入力：')
+print(f'被験者番号は{Num}です')
+
+extime = input('実験が前半なら1、後半なら2を入力：')
+print(f'この実験は{extime}です')
+
 def write_to_csv(time_value, filenames, timing):
-    with open('time_log_voice.csv', 'a', newline='', encoding='utf-8') as csvfile:
+    with open('time_log_voice' + str(extime) + '_' + Num + '.csv', 'a', newline='', encoding='utf-8') as csvfile:
         fieldnames = ['Timestamp', 'Name', 'Timing']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -95,11 +103,11 @@ def write_to_csv(time_value, filenames, timing):
         writer.writerow({'Timestamp': time_value, 'Name': filenames, 'Timing': timing})
 
 if __name__ == "__main__":
-    click_positions = [(657, 585)]
-    click_positions1 = [(1259, 64)]
-    click_positions2 = [(120, 10)]
+    click_positions = [(3379, 708)] # アイトラッカー(Tobii Pro Fusion)
+    click_positions1 = [(296, 70)] # 脳波計
+    click_positions2 = [(981, 166)] # 心拍計(必ず心拍計のボタンを押すようにすること)
 
-    # 使用したいサウンドデバイスを指定
+    # 使用したいサウンドデバイスを指定 (普段ならこの設定で外部のデバイスも動くはず、動かなければsound_device_search.pyを実行してデバイスを探す)
     selected_device = {'DeviceIndex': 6.0,
                         'HostAudioAPIId': 13.0, 
                         'HostAudioAPIName': 'Windows WASAPI', 
@@ -113,10 +121,18 @@ if __name__ == "__main__":
                                 'DefaultSampleRate': 48000.0, 
                                 'id': 1}
     
-
-    sound_folder = "sound_jikken1/実験で使う音刺激(候補)/ニュートラル"
-    sound_folder1 = "sound_jikken1/実験で使う音刺激(候補)/ネガティブ"
-    sound_folder2 = "sound_jikken1/実験で使う音刺激(候補)/ポジティブ"
+# 音源セット1
+    #sound_folder = "ニュートラル1"
+    #sound_folder1 = "ネガティブ1"
+    #sound_folder2 = "ポジティブ1"
+    
+# 音源セット2
+    sound_folder = "ニュートラル2"
+    sound_folder1 = "ポジティブ2"
+    sound_folder2 = "ネガティブ2"
+    
+    
+    
 
     sound_list = sound_load(sound_folder)
     sound_list1 = sound_load(sound_folder1)
